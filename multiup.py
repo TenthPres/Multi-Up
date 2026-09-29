@@ -21,6 +21,8 @@ from dataclasses import dataclass
 import pikepdf
 from pikepdf import Array, Dictionary, Name, Pdf, Stream
 
+__version__ = "dev"  # replaced from the git tag by the release workflow
+
 PT = 72.0  # points per inch
 INHERITABLE = ("/Resources", "/MediaBox", "/CropBox", "/Rotate")
 
@@ -421,6 +423,7 @@ def build(args):
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Impose a PDF multi-up on a larger sheet, preserving colour spaces.")
+    ap.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     ap.add_argument("input", help="source PDF")
     ap.add_argument("sheet", type=parse_size,
                     help="target sheet size in inches, WIDTHxHEIGHT (e.g. 12x18)")

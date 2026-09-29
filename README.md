@@ -42,6 +42,21 @@ neighbors meet at the trim line. The outer edges always keep the full bleed.
 Run `build_exe.bat`. It produces `dist\multiup.exe`, a single file of about 32 MB
 that runs without Python installed.
 
+### Releases
+
+Pushing a tag that starts with `v` builds the exe on GitHub Actions and attaches
+it to a new GitHub Release. The version shown by `multiup --version` is taken
+from the tag.
+
+```
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
 ## Limitations
 
 - Annotations and form fields are not carried over. Flatten them first.

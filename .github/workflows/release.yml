@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Stamp version from tag
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart("v")
+          (Get-Content multiup.py) -replace '^__version__ = .*', "__version__ = `"$v`"" |
+            Set-Content multiup.py -Encoding utf8NoBOM
+
+      - name: Build exe
+        run: |
+          python -m pip install -r requirements.txt pyinstaller
+          python -m PyInstaller --onefile --console --name multiup --collect-all pikepdf multiup.py
+
+      - name: Smoke test
+        run: dist\multiup.exe --version
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/multiup.exe
+          generate_release_notes: true
